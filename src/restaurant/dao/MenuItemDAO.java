@@ -9,4 +9,6 @@ public interface MenuItemDAO {
     boolean updatePrice(int id, double newPrice);
     boolean deleteMenuItem(int id);
     List<Menu_items> getAllMenuItems();
+    Menu_items getMenuItemById(int id);
+    List<Menu_items> searchMenuItemsByName(String keyword);
 }

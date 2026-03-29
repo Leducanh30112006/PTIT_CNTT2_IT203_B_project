@@ -1,8 +1,11 @@
 package restaurant;
 
 import restaurant.model.User;
+import restaurant.view.ChefUI;
+import restaurant.view.CustomerUI;
 import restaurant.view.ManagerUI;
 import restaurant.service.AuthService;
+import restaurant.service.impl.AuthServiceImpl;
 import restaurant.util.DBConnection;
 
 import java.sql.Connection;
@@ -12,25 +15,27 @@ public class Application {
     public static void main(String[] args) {
 
 
-        // 1. Kiểm tra Database trước khi chạy app
         Connection conn = DBConnection.getConnection();
         if (conn == null) {
-            System.out.println(" Lỗi: Không thể kết nối Database. Vui lòng kiểm tra lại cấu hình!");
+            System.out.println("Lỗi: Không thể kết nối Database. Vui lòng kiểm tra lại cấu hình!");
             return;
         }
 
-        // 2. Khởi tạo các đối tượng dùng chung
+
         Scanner scanner = new Scanner(System.in);
-        AuthService authService = new AuthService();
+
+
+        AuthService authService = new AuthServiceImpl();
+
         boolean isRunning = true;
 
         // 3. Vòng lặp Menu Chính
         while (isRunning) {
             System.out.println("\n=========================================");
-            System.out.println("  PHẦN MỀM QUẢN LÝ NHÀ HÀNG ");
+            System.out.println("      HỆ THỐNG QUẢN LÝ NHÀ HÀNG          ");
             System.out.println("=========================================");
             System.out.println("1. Đăng nhập hệ thống");
-            System.out.println("2. Đăng ký tài khoản (Dành cho Khách hàng)");
+            System.out.println("2. Đăng ký tài khoản (Khách hàng)");
             System.out.println("0. Thoát chương trình");
             System.out.print("Lựa chọn của bạn (0-2): ");
 
@@ -48,14 +53,12 @@ public class Application {
                     isRunning = false;
                     break;
                 default:
-                    System.out.println("\nLựa chọn không hợp lệ. Vui lòng nhập từ 0 đến 2.");
+                    System.out.println("\nLựa chọn không hợp lệ.");
             }
         }
-
         scanner.close();
     }
 
-    // --- HÀM XỬ LÝ ĐĂNG NHẬP ---
     private static void handleLogin(Scanner scanner, AuthService authService) {
         System.out.println("\n--- ĐĂNG NHẬP ---");
         System.out.print("Tên đăng nhập: ");
@@ -66,49 +69,39 @@ public class Application {
         User loggedInUser = authService.login(username, password);
 
         if (loggedInUser != null) {
-            System.out.println("\nĐăng nhập thành công! Xin chào " + loggedInUser.getFullName());
 
-            // Điều hướng dựa trên Role của tài khoản
+
             switch (loggedInUser.getRole()) {
                 case "MANAGER":
-                    // Chuyển quyền điều khiển sang màn hình Quản lý
-                    ManagerUI managerUI = new ManagerUI(scanner);
-                    managerUI.display(loggedInUser);
+                    new ManagerUI(scanner).display(loggedInUser);
                     break;
                 case "CHEF":
-                    System.out.println(">>> [Đang chuyển hướng đến Menu Bếp... Chức năng đang xây dựng]");
-                    // ChefUI
+                    new ChefUI(scanner).display(loggedInUser);
                     break;
                 case "CUSTOMER":
-                    System.out.println(">>> [Đang chuyển hướng đến Menu Khách hàng... Chức năng đang xây dựng]");
-                    // CustomerUI
+                    new CustomerUI(scanner).display(loggedInUser);
                     break;
                 default:
-                    System.out.println("Lỗi: Không nhận diện được quyền của tài khoản này!");
+                    System.out.println("Lỗi: Quyền truy cập không hợp lệ!");
             }
-        } else {
-            System.out.println("Sai tài khoản hoặc mật khẩu! Vui lòng thử lại.");
         }
     }
 
-    // --- HÀM XỬ LÝ ĐĂNG KÝ ---
     private static void handleRegister(Scanner scanner, AuthService authService) {
-        System.out.println("\n--- ĐĂNG KÝ TÀI KHOẢN KHÁCH HÀNG ---");
-        System.out.print("Nhập họ và tên: ");
+        System.out.println("\n---ĐĂNG KÝ KHÁCH HÀNG ---");
+        System.out.print("Họ và tên: ");
         String fullName = scanner.nextLine();
-
-        System.out.print("Nhập tên đăng nhập: ");
+        System.out.print("Tên đăng nhập: ");
         String username = scanner.nextLine();
-
-        System.out.print("Nhập mật khẩu: ");
+        System.out.print("Mật khẩu: ");
         String password = scanner.nextLine();
 
-        // Validate cơ bản không cho nhập rỗng
         if (username.trim().isEmpty() || password.trim().isEmpty() || fullName.trim().isEmpty()) {
-            System.out.println("Lỗi: Không được để trống thông tin!");
+            System.out.println("Lỗi: Thông tin không được để rỗng!");
             return;
         }
 
+        // Gọi hàm register trong interface
         authService.register(username, password, fullName);
     }
 }

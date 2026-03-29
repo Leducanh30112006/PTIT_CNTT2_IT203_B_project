@@ -77,5 +77,54 @@ public class MenuItemDAOImpl implements MenuItemDAO {
         }
         return list;
     }
+
+    @Override
+    public Menu_items getMenuItemById(int id) {
+        String sql = "SELECT * FROM menu_items WHERE id = ? AND status != 'OUT_OF_STOCK'";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Menu_items item = new Menu_items();
+                item.setId(rs.getInt("id"));
+                item.setName(rs.getString("name"));
+                item.setPrice(rs.getDouble("price"));
+                item.setType(rs.getString("type"));
+                item.setStock(rs.getInt("stock"));
+                item.setStatus(rs.getString("status"));
+                return item;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null; // Trả về null nếu không tìm thấy
+    }
+
+    @Override
+    public List<Menu_items> searchMenuItemsByName(String keyword) {
+        List<Menu_items> list = new ArrayList<>();
+        // Tìm kiếm tương đối dùng LIKE %keyword%
+        String sql = "SELECT * FROM menu_items WHERE name LIKE ? AND status != 'OUT_OF_STOCK'";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, "%" + keyword + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Menu_items item = new Menu_items();
+                item.setId(rs.getInt("id"));
+                item.setName(rs.getString("name"));
+                item.setPrice(rs.getDouble("price"));
+                item.setType(rs.getString("type"));
+                item.setStock(rs.getInt("stock"));
+                item.setStatus(rs.getString("status"));
+                list.add(item);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }
+
 
