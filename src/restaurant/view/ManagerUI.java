@@ -30,7 +30,7 @@ public class ManagerUI {
             System.out.println("3. Sửa thông tin món");
             System.out.println("4. Xóa món ăn");
             System.out.println("5. Tìm kiếm món theo tên");
-            System.out.println("6. Quản lý bàn ăn (CRUD Bàn)");
+            System.out.println("6. Quản lý bàn ăn ");
             System.out.println("0. Đăng xuất");
             System.out.print("Chọn chức năng (0-6): ");
 
@@ -70,13 +70,6 @@ public class ManagerUI {
                         managerService.searchDishByName(scanner);
                         break;
                     case "6":
-                        tableService.displayAllTables();
-
-                        System.out.println("\n1. Thêm bàn mới");
-                        System.out.println("2. Sửa thông tin bàn");
-                        System.out.println("3. Xóa bàn");
-                        System.out.println("0. Quay lại");
-                        String subChoice = scanner.nextLine();
                         tableService.handleTableManager(scanner);
                         break;
 

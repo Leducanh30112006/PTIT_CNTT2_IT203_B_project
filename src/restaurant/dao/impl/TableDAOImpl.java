@@ -18,6 +18,7 @@ public class TableDAOImpl implements TableDAO {
             stmt.setInt(2, table.getCapacity());
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
+            System.out.println("Lỗi bàn đã tồn tại");
             return false;
         }
     }
@@ -33,7 +34,8 @@ public class TableDAOImpl implements TableDAO {
             stmt.setInt(3, table.getId());
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+//
+            System.out.println("Lỗi bàn đã tồn tại");
             return false;
         }
     }

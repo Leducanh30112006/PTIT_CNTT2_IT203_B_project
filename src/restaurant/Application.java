@@ -13,7 +13,7 @@ import java.util.Scanner;
 
 public class Application {
     public static void main(String[] args) {
-
+        System.out.println("Kết nối Database thành công!");
 
         Connection conn = DBConnection.getConnection();
         if (conn == null) {
