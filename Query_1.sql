@@ -1,11 +1,11 @@
 USE restaurant_manager;
 
 
-INSERT INTO users (username, password, full_name, role) VALUES 
-('admin', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Quản lý Đức Anh', 'MANAGER'),
-('chef_huy', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Bếp trưởng Huy', 'CHEF'),
-('khach_vip', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Khách hàng VIP 1', 'CUSTOMER'),
-('khach_vang', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Khách hàng Vãng lai', 'CUSTOMER');
+INSERT INTO users (username, password, full_name, role,status) VALUES
+('admin', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Quản lý Đức Anh', 'MANAGER','ACTIVE'),
+('chef_huy', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Bếp trưởng Huy', 'CHEF','ACTIVE'),
+('khach_vip', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Khách hàng VIP 1', 'CUSTOMER','ACTIVE'),
+('khach_vang', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'Khách hàng Vãng lai', 'CUSTOMER','ACTIVE');
 
 
 INSERT INTO tables (table_number, capacity, status) VALUES 

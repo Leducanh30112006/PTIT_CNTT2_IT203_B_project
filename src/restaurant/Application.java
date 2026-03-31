@@ -29,7 +29,7 @@ public class Application {
 
         boolean isRunning = true;
 
-        // 3. Vòng lặp Menu Chính
+
         while (isRunning) {
             System.out.println("\n=========================================");
             System.out.println("      HỆ THỐNG QUẢN LÝ NHÀ HÀNG          ");
@@ -101,7 +101,7 @@ public class Application {
             return;
         }
 
-        // Gọi hàm register trong interface
+
         authService.register(username, password, fullName);
     }
 }

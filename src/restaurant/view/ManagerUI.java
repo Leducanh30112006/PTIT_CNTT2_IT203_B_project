@@ -31,6 +31,8 @@ public class ManagerUI {
             System.out.println("4. Xóa món ăn");
             System.out.println("5. Tìm kiếm món theo tên");
             System.out.println("6. Quản lý bàn ăn ");
+            System.out.println("7. Hiển thị danh sách người dùng ");
+            System.out.println("8. Quản lý bàn ăn ");
             System.out.println("0. Đăng xuất");
             System.out.print("Chọn chức năng (0-6): ");
 
@@ -71,6 +73,9 @@ public class ManagerUI {
                         break;
                     case "6":
                         tableService.handleTableManager(scanner);
+                        break;
+                    case "7":
+
                         break;
 
                     case "0":

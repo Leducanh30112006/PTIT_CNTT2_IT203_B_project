@@ -13,7 +13,7 @@ public class ManagerService {
         this.menuItemDAO = new MenuItemDAOImpl();
     }
 
-    // --- 1. HIỂN THỊ DANH SÁCH ---
+    // --- HIỂN THỊ DANH SÁCH ---
     public void displayMenu(List<Menu_items> menu) {
         if (menu == null || menu.isEmpty()) {
             System.out.println("Không có món ăn nào trong danh sách!");
@@ -33,7 +33,7 @@ public class ManagerService {
         displayMenu(menuItemDAO.getAllMenuItems());
     }
 
-    // --- 2. THÊM MÓN ---
+    // --- THÊM MÓN ---
     public void addNewDish(String name, double price, String type, int stock) {
         if (name == null || name.trim().length() < 2) {
             System.out.println("Lỗi: Tên món không hợp lệ (phải từ 2 ký tự trở lên)!");
@@ -58,7 +58,7 @@ public class ManagerService {
         }
     }
 
-    // --- 3. SỬA MÓN ---
+    // --- SỬA MÓN ---
     public void updateDish(Scanner scanner) {
         System.out.print("Nhập ID món cần sửa: ");
         int id = Integer.parseInt(scanner.nextLine());
@@ -87,7 +87,7 @@ public class ManagerService {
         }
     }
 
-    // --- 4. XÓA MÓN (Có xác nhận Y/N) ---
+    // --- XÓA MÓN (Có xác nhận Y/N) ---
     public void deleteDish(Scanner scanner) {
         System.out.print("Nhập ID món cần xóa: ");
         int id = Integer.parseInt(scanner.nextLine());
@@ -112,7 +112,7 @@ public class ManagerService {
         }
     }
 
-    // --- 5. TÌM KIẾM THEO TÊN ---
+    // --- TÌM KIẾM THEO TÊN ---
     public void searchDishByName(Scanner scanner) {
         System.out.print("Nhập tên món cần tìm: ");
         String keyword = scanner.nextLine();

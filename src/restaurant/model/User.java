@@ -18,7 +18,7 @@ public class User {
         this.role = role;
     }
 
-    // Getters and Setters (Bạn dùng IDE generate tự động cho nhanh nhé)
+
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public String getUsername() { return username; }

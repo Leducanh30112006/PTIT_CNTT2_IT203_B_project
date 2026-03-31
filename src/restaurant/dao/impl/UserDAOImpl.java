@@ -36,7 +36,7 @@ public class UserDAOImpl implements UserDAO {
         } catch (Exception e) {
             System.err.println("Lỗi truy vấn đăng nhập: " + e.getMessage());
         }
-        return null; // Trả về null nếu không tìm thấy user hợp lệ
+        return null;
     }
 
     @Override
@@ -49,13 +49,13 @@ public class UserDAOImpl implements UserDAO {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
 
-            // Nếu rs.next() là true, nghĩa là đã tìm thấy username trong Database
+
             return rs.next();
 
         } catch (Exception e) {
             System.err.println("Lỗi kiểm tra username: " + e.getMessage());
         }
-        return true; // Trả về true để an toàn chặn đăng ký nếu DB bị lỗi
+        return true;
     }
 
     @Override

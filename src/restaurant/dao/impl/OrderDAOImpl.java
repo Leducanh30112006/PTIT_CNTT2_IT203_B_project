@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-// THÊM: implements OrderDAO
+
 public class OrderDAOImpl implements OrderDAO {
 
     @Override
@@ -57,7 +57,7 @@ public class OrderDAOImpl implements OrderDAO {
         }
     }
 
-    // Bổ sung hàm này để trả về List Model cho đúng Interface
+
     @Override
     public List<OrderDetail> getOrderDetailsByOrderId(int orderId) {
         List<OrderDetail> list = new ArrayList<>();
@@ -125,6 +125,91 @@ public class OrderDAOImpl implements OrderDAO {
         } catch (SQLException e) {
             return false;
         }
+    }
+
+    @Override
+    public double printInvoiceAndGetTotal(int orderId) {
+        String sql = "SELECT m.name, m.price, od.quantity, (m.price * od.quantity) AS subtotal " +
+                "FROM order_details od " +
+                "JOIN menu_items m ON od.item_id = m.id " +
+                "WHERE od.order_id = ? AND od.status != 'CANCELLED'";
+        double total = 0.0;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, orderId);
+            ResultSet rs = stmt.executeQuery();
+
+            System.out.println("\n=========================================================");
+            System.out.println("                   HÓA ĐƠN THANH TOÁN                    ");
+            System.out.println("=========================================================");
+            System.out.printf("| %-20s | %-10s | %-4s | %-10s |\n", "Tên món", "Đơn giá", "SL", "Thành tiền");
+            System.out.println("---------------------------------------------------------");
+
+            boolean hasItems = false;
+            while (rs.next()) {
+                hasItems = true;
+                String name = rs.getString("name");
+                double price = rs.getDouble("price");
+                int qty = rs.getInt("quantity");
+                double subtotal = rs.getDouble("subtotal");
+                total += subtotal;
+
+                System.out.printf("| %-20s | %-10.0f | %-4d | %-10.0f |\n", name, price, qty, subtotal);
+            }
+
+            if (!hasItems) {
+                System.out.println("| Hóa đơn trống (Chưa gọi món hoặc đã hủy hết)          |");
+            }
+            System.out.println("=========================================================");
+            System.out.printf("  TỔNG CỘNG: %,.0f VNĐ\n", total);
+            System.out.println("=========================================================");
+
+        } catch (SQLException e) {
+//            e.printStackTrace();
+            System.out.println("Lỗi khi in hóa đơn: " + e.getMessage());
+        }
+        return total;
+    }
+
+    @Override
+    public boolean checkoutOrder(int orderId) {
+        String getTableId = "SELECT table_id FROM orders WHERE id = ?";
+        String updateOrder = "UPDATE orders SET status = 'PAID' WHERE id = ?";
+        String updateTable = "UPDATE tables SET status = 'FREE' WHERE id = ?";
+
+        try (Connection conn = DBConnection.getConnection()) {
+            conn.setAutoCommit(false); // Bật Transaction để đảm bảo an toàn dữ liệu
+
+            try (PreparedStatement stmtSelect = conn.prepareStatement(getTableId);
+                 PreparedStatement stmtOrder = conn.prepareStatement(updateOrder);
+                 PreparedStatement stmtTable = conn.prepareStatement(updateTable)) {
+
+                // Lấy ID bàn
+                stmtSelect.setInt(1, orderId);
+                ResultSet rs = stmtSelect.executeQuery();
+                if (!rs.next()) return false;
+                int tableId = rs.getInt("table_id");
+
+                // Đổi Order -> PAID
+                stmtOrder.setInt(1, orderId);
+                stmtOrder.executeUpdate();
+
+                // Đổi Table -> FREE
+                stmtTable.setInt(1, tableId);
+                stmtTable.executeUpdate();
+
+                conn.commit(); // Thành công 100% thì mới lưu xuống MySQL
+                return true;
+            } catch (SQLException ex) {
+                conn.rollback(); // Có lỗi thì hoàn tác ngay
+                ex.printStackTrace();
+            }
+        } catch (SQLException e) {
+//            e.printStackTrace();
+            System.out.println("Lỗi khi thanh toán: " + e.getMessage());
+        }
+        return false;
     }
 
     // Giữ lại hàm in bảng để phục vụ UI nhanh

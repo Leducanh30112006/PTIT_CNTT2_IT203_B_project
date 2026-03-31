@@ -12,4 +12,6 @@ public interface OrderDAO {
     List<OrderDetail> getAllPendingDetails(); // Đầu bếp xem món đang chờ
     boolean updateStatus(int detailId, String status); // Cập nhật PENDING -> COOKING...
     boolean cancelDetail(int detailId); // Hủy món
+    double printInvoiceAndGetTotal(int orderId);
+    boolean checkoutOrder(int orderId);
 }

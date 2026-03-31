@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class TableService {
-    private final TableDAO tableDAO = new TableDAOImpl();
+    private static final TableDAO tableDAO = new TableDAOImpl();
 
-    // Hàm hiển thị danh sách bàn
-    public void displayAllTables() {
+
+    public static void  displayAllTables() {
         List<Table> tables = tableDAO.getAllTables();
         System.out.println("\n---------------------------------------------------------");
         System.out.printf("| %-5s | %-12s | %-10s | %-12s |\n", "ID", "Số bàn", "Sức chứa", "Trạng thái");
@@ -27,7 +27,7 @@ public class TableService {
     public void handleTableManager(Scanner scanner) {
         boolean back = false;
         while (!back) {
-            System.out.println("\n--- 🛠 QUẢN LÝ BÀN ĂN ---");
+            System.out.println("\n--- QUẢN LÝ BÀN ĂN ---");
             System.out.println("1. Xem danh sách bàn");
             System.out.println("2. Thêm bàn mới");
             System.out.println("3. Sửa thông tin bàn");
@@ -37,11 +37,21 @@ public class TableService {
             String choice = scanner.nextLine();
 
             switch (choice) {
-                case "1": displayAllTables(); break;
-                case "2": addTable(); break;
-                case "3": updateTable(); break;
-                case "4": deleteTable(scanner); break;
-                case "0": back = true; break;
+                case "1":
+                    displayAllTables();
+                    break;
+                case "2":
+                    addTable();
+                    break;
+                case "3":
+                    updateTable();
+                    break;
+                case "4":
+                    deleteTable(scanner);
+                    break;
+                case "0":
+                    back = true;
+                    break;
                 default: System.out.println("Sai lựa chọn!");
             }
         }
@@ -71,12 +81,50 @@ public class TableService {
     private void deleteTable(Scanner scanner) {
         int id = InputValidator.readIntPositive("Nhập ID bàn muốn xóa: ");
         Table old = tableDAO.getTableById(id);
-        if (old == null) {
-            System.out.println("Không tồn tại!"); return; }
 
-        System.out.print("⚠Bạn có chắc muốn xóa bàn " + old.getTableNumber() + "? (Y/N): ");
-        if (scanner.nextLine().equalsIgnoreCase("Y")) {
-            if (tableDAO.deleteTable(id)) System.out.println("Đã xóa!");
+        if (old == null) {
+            System.out.println("Không tồn tại bàn có ID: " + id);
+            return;
         }
+
+        System.out.print("Bạn có chắc muốn xóa bàn " + old.getTableNumber() + "? (Y/N): ");
+
+
+        String choice = scanner.nextLine().trim().toUpperCase();
+
+        if (choice.equals("Y")) {
+            if (tableDAO.deleteTable(id)) {
+                System.out.println("Đã xóa thành công!");
+            } else {
+                System.out.println("Xóa thất bại (có lỗi xảy ra)!");
+            }
+        } else if (choice.equals("N")) {
+            System.out.println("Đã hủy thao tác xóa.");
+        } else {
+            System.out.println("Lựa chọn không hợp lệ! Vui lòng chỉ nhập Y hoặc N.");
+        }
+    }
+    public void displayFreeTables() {
+        List<Table> tables = tableDAO.getAllTables();
+        boolean hasFree = false;
+        System.out.println("\n---------------------------------------------------------");
+        System.out.printf("| %-5s | %-12s | %-10s | %-12s |\n", "ID", "Số bàn", "Sức chứa", "Trạng thái");
+        System.out.println("---------------------------------------------------------");
+        for (Table t : tables) {
+            if (t.getStatus().equalsIgnoreCase("FREE")) {
+                System.out.printf("| %-5d | %-12s | %-10d | %-12s |\n",
+                        t.getId(), t.getTableNumber(), t.getCapacity(), t.getStatus());
+                hasFree = true;
+            }
+        }
+        System.out.println("---------------------------------------------------------");
+        if (!hasFree) {
+            System.out.println("Hiện tại nhà hàng đã hết bàn trống!");
+        }
+    }
+
+    //  Lấy thông tin 1 bàn cụ thể để UI kiểm tra
+    public Table getTableById(int id) {
+        return tableDAO.getTableById(id);
     }
 }

@@ -24,7 +24,7 @@ public class ChefUI {
             System.out.println("1. Danh sách món khách đang gọi");
             System.out.println("2. Cập nhật tiến độ nấu nướng");
             System.out.println("0. Đăng xuất");
-            System.out.print("👉 Lựa chọn của bạn: ");
+            System.out.print("Lựa chọn của bạn: ");
 
             String choice = scanner.nextLine();
 
@@ -59,7 +59,7 @@ public class ChefUI {
         System.out.println("2. READY   (Đã xong, chờ phục vụ)");
         System.out.println("3. SERVED  (Đã phục vụ tận bàn)");
         System.out.println("0. Quay lại");
-        System.out.print("👉 Chọn trạng thái (0-3): ");
+        System.out.print("Chọn trạng thái (0-3): ");
 
         String statusChoice = scanner.nextLine();
         String newStatus = "";

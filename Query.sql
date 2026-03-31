@@ -8,7 +8,9 @@ CREATE TABLE users (
                        password VARCHAR(255) NOT NULL,
                        full_name VARCHAR(100),
                        role ENUM('MANAGER', 'CHEF', 'CUSTOMER') NOT NULL,
-                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                       status ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE'
+
 );
 
 -- 2. Bảng bàn ăn

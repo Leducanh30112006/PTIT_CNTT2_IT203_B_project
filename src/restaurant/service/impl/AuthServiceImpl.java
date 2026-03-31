@@ -13,7 +13,18 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public User login(String username, String rawPassword) {
         String hashedPassword = PasswordHasher.hash(rawPassword);
-        return userDAO.getUserByUsernameAndPassword(username, hashedPassword);
+
+        User user = userDAO.getUserByUsernameAndPassword(username, hashedPassword);
+
+        if (user != null) {
+            System.out.println("Đăng nhập thành công! Chào mừng " + user.getFullName());
+        } else {
+
+            System.out.println("Lỗi: Sai tên đăng nhập hoặc mật khẩu. Vui lòng thử lại!");
+
+        }
+        return user;
+
     }
 
     @Override
